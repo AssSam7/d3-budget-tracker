@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Compiled and minified Materialize CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
+    <title>Budget Planner | Malsaslam</title>
+
+    <style>
+      h2,
+      p {
+        margin: 10px 0;
+      }
+
+      header {
+        margin-bottom: 40px;
+      }
+    </style>
+  </head>
+  <body class="indigo">
+    <header class="indigo darken-1 section">
+      <h2 class="center white-text">Malsaslam</h2>
+      <p class="flow-text grey-text center text-lighten-2">
+        Monthly money tracker
+      </p>
+    </header>
+
+    <div class="container section">
+      <div class="row">
+        <div class="col s12 m6">
+          <form class="card z-depth-0">
+            <div class="card-content">
+              <span class="card-title indigo-text">Add Item:</span>
+              <div class="input-field">
+                <input type="text" id="name" />
+                <label for="name">Item Name</label>
+              </div>
+              <div class="input-field">
+                <input type="text" id="cost" />
+                <label for="cost">Item Cost ($) </label>
+              </div>
+              <div class="input-field center">
+                <button class="btn-large pink white-text">Add item</button>
+              </div>
+              <div class="input-field center">
+                <p class="red-text" id="error"></p>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="col s12 m5 push-m1">
+          <div class="canvas"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/7.19.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.19.0/firebase-firestore.js"></script>
+
+    <script>
+      // Your web app's Firebase configuration
+      var firebaseConfig = {
+        apiKey: "AIzaSyDQQN1E2V8K8wFqjHKiSjimAHvjagZst0k",
+        authDomain: "d3-firebase-starter.firebaseapp.com",
+        databaseURL: "https://d3-firebase-starter.firebaseio.com",
+        projectId: "d3-firebase-starter",
+        storageBucket: "d3-firebase-starter.appspot.com",
+        messagingSenderId: "1020387918909",
+        appId: "1:1020387918909:web:508221bf07b68bc2079654",
+        measurementId: "G-XJ376VQ9BE",
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore();
+    </script>
+    <script src="https://d3js.org/d3.v5.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.js"
+      integrity="sha512-5mCB0Kvv97yTzqo0174qxPjMisck/WlK51+mw/RV7UfYbtHI8LuLR82BzZuxHUKSfbh75u9cZHgUcqrZDaBJuA=="
+      crossorigin="anonymous"
+    ></script>
+    <!-- Compiled and minified Materialize JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="app.js"></script>
+    <script src="graph.js"></script>
+  </body>
+</html>
