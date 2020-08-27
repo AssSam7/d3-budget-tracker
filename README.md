@@ -6,7 +6,7 @@
 </p>
 
 <p align="center">
-<img src="https://s8.gifyu.com/images/ezgif.com-video-to-gif.gif">
+<img src="https://s8.gifyu.com/images/Budget-Planner-_-Malsaslam.gif">
 </p>
 
 
