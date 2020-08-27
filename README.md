@@ -386,5 +386,5 @@ const legend = d3.legendColor().shape("circle").scale(color).shapePadding(15);
 
 ```javascript
 legendGroup.call(legend);
-  legendGroup.selectAll("text").attr("fill", "white");
+legendGroup.selectAll("text").attr("fill", "white");
 ```
