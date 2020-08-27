@@ -269,9 +269,6 @@ paths.exit().remove()
 ```javascript
 paths
     .attr("d", arcPath)
-    .transition()
-    .duration(750)
-    .attrTween("d", arcTweenUpdate);
 ```
 
 5. Adding elements from exit selection
@@ -292,4 +289,102 @@ paths
 ```javascript
 legendGroup.call(legend);
 legendGroup.selectAll("text").attr("fill", "white");
+```
+
+## Transitions using Custom Tweens
+
+Tweens are similar to **key frames** in CSS, where we can create complex transitions based on usecase. It operates based on 2 values
+- **Interpolation function:** It is like the starting and ending states of animation.
+- **Time-ticker:** It ticks between **0** and **1** for all the range of values interpolated.
+
+### 1. Arc Enter Tween
+
+This tween renders the animation when the arc enters the selection.
+
+```javascript
+const arcTweenEnter = (d) => {
+  let i = d3.interpolate(d.endAngle, d.startAngle);
+
+  return function (t) {
+    d.startAngle = i(t);
+    return arcPath(d);
+  };
+};
+```
+
+**Applying**
+```javascript
+.transition()
+.duration(750)
+  .attrTween("d", arcTweenEnter);
+ ```
+ 
+ ### 2. Arc Exit Tween
+ 
+ The transition when an element is deleted and removed through the exit selection.
+ 
+ ```javascript
+ const arcTweenExit = (d) => {
+  let i = d3.interpolate(d.startAngle, d.endAngle);
+
+  return function (t) {
+    d.startAngle = i(t);
+    return arcPath(d);
+  };
+};
+```
+
+**Applying**
+```javascript
+.transition().duration(750).attrTween("d", arcTweenExit)
+```
+
+### 3. Arc Update Tween
+
+When a value is updated in the back-end, this animation is applied to re-render the visualization.
+
+```javascript
+function arcTweenUpdate(d) {
+  // Interpolate between the two objects
+  let i = d3.interpolate(this._current, d);
+
+  // Update the current to the new values
+  this._current = i(1);
+
+  return function (t) {
+    return arcPath(i(t));
+  };
+}
+```
+
+**Applying**
+```javascript
+.transition()
+    .duration(750)
+    .attrTween("d", arcTweenUpdate);
+```
+
+## Legends
+
+Legends are those small dots beside the chart which describe the mapping of color with the propery i.e. name in this case. For drawing legends, I used a third-party plug-in of **D3.js** for visualizing legends.
+
+### 1. Legend Group
+
+```javascript
+const legendGroup = svg
+  .append("g")
+  .attr("transform", `translate(${dims.width + 40}, 10)`);
+```
+
+### 2. Drawing legend
+
+```javascript
+const legend = d3.legendColor().shape("circle").scale(color).shapePadding(15);
+```
+
+### 3. Updating and calling legends
+
+```javascript
+legendGroup.call(legend);
+  legendGroup.selectAll("text").attr("fill", "white");
 ```
