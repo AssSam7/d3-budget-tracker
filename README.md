@@ -47,7 +47,7 @@ Get the below code from console.firebase.google.com and check out, Adding this p
   const db = firebase.firestore();
 </script>
 ```
-## HTML template using Materialize-css
+## HTML template using Materialize-CSS
 
 ### 1. Header
 ```html
@@ -94,9 +94,58 @@ Get the below code from console.firebase.google.com and check out, Adding this p
 ```
 
 #### 2.2 Graph Canvas
+
 ```html
 <div class="col s12 m5 push-m1">
   <div class="canvas"></div>
 </div>
 ```
+
+## Selecting DOM Elements
+
+```javascript
+const form = document.querySelector("form");
+const name = document.querySelector("#name");
+const cost = document.querySelector("#cost");
+const error = document.querySelector("#error");
+```
+
+## Form Event Listener
+
+
+```javascript
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  ...
+  ...
+});
+```
+
+### 1. Form Validations
+
+```javascript
+ if (name.value && cost.value) {
+    error.textContent = "";
+  } else {
+    error.textContent = "Please enter the above values";
+  }
+```
+
+### 2. Saving the data from the form to firestore
+
+```javascript
+const item = {
+  name: name.value,
+  cost: parseInt(cost.value),
+};
+
+// Inserting a new document in the firestore database
+db.collection("budget-planner")
+  .add(item)
+  .then((res) => {
+    name.value = "";
+    cost.value = "";
+  });
+```
+
 
