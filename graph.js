@@ -24,7 +24,7 @@ const pie = d3
   .sort(null)
   .value((d) => d.cost);
 
-const arcPath = d3.arc().outerRadius(dims.radius).innerRadius(50);
+const arcPath = d3.arc().outerRadius(dims.radius).innerRadius(70);
 
 // Ordinal Scale for colors
 const color = d3.scaleOrdinal(d3["schemeSet2"]);
