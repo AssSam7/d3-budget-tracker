@@ -148,4 +148,148 @@ db.collection("budget-planner")
   });
 ```
 
+## Adding visualizations 🎨
 
+### 1. Setting the dimensions
+
+Using the Javascript object to store the dimensions
+```javascript
+const dims = {
+  height: 300,
+  width: 300,
+  radius: 150,
+};
+
+const cent = {
+  x: dims.width / 2 + 5,
+  y: dims.height / 2 + 5,
+};
+```
+
+### 2. Selecting the canvas and appending SVG
+
+```javascript
+const svg = d3
+  .select(".canvas")
+  .append("svg")
+  .attr("width", dims.width + 150)
+  .attr("height", dims.height + 150);
+
+const graph = svg
+  .append("g")
+  .attr("transform", `translate(${cent.x}, ${cent.y})`);
+```
+
+### 3. Pie Generator
+
+It is used to generate the angles of pie slices automatically based on data. On passing the data through this, it results a bunch of angles binded with data which are essential to draw the arcs and form the donut chart
+
+```javascript
+const pie = d3
+  .pie()
+  .sort(null)
+  .value((d) => d.cost);
+```
+To unsort the data, **.sort()** must be called with **null** as a parameter.
+
+### 4. Arc Path Generator
+
+From the **Pie-generator** angles to draw the arcs are generated, from the **Arc path** generator the donut chart can be drawn using those angles.
+
+```javascript
+const arcPath = d3.arc().outerRadius(dims.radius).innerRadius(70);
+```
+
+- **Outer radius:** The radius of the outer slice, also known as overall radius.
+- **Inner radius:** The radius from the center of the circle where the arc should be drawn.
+
+### 5. Ordinal Scale
+
+This scale is used to generate the colors with which the arcs or slices of the donut chart are drawn. It accepts **names** properties in our case as the **domain** and return a range of **colors** to be filled. In this project, I used a **scheme set** to automically determine the color based of domain values.
+
+```javascript
+const color = d3.scaleOrdinal(d3["schemeSet2"]);
+```
+
+### 6. Listening for real-time data updates from firestore
+
+We can use **onSnapshot()** method of the firestore. This method accepts a call-back as an argument with **res** as its parameter.
+
+1. Apply this method on our collection where the data is stored
+2. There are 3 cases of data alteration in firestore
+   - **Added**: When a new document is added to the collection.
+   - **Modified**: When a existing document properties are altered or new properties are added to an existing document.
+   - **Deleted**: When an existing document is deleted.
+
+```javascript
+db.collection("budget-planner").onSnapshot((res) => {
+  res.docChanges().forEach((change) => {
+    const doc = { ...change.doc.data(), id: change.doc.id };
+
+    switch (change.type) {
+      case "added":
+        data.push(doc);
+        break;
+      case "modified":
+        const index = data.findIndex((item) => item.id == doc.id);
+        data[index] = doc;
+        break;
+      case "removed":
+        data = data.filter((item) => item.id !== doc.id);
+        break;
+      default:
+        break;
+    }
+  });
+
+  update(data);
+});
+```
+
+### 7. Update function
+
+The function that executes everytime the data changes to re-renders the visualizations.
+
+1. Passing names to ordinal scale domain
+```javascript
+color.domain(data.map((d) => d.name));
+```
+
+2. Join enhanced (pie) data to path elements
+```javascript
+const paths = graph.selectAll("path").data(pie(data));
+```
+
+3. Exit selection
+```javascript
+paths.exit().remove()
+```
+
+4. Current DOM updates
+```javascript
+paths
+    .attr("d", arcPath)
+    .transition()
+    .duration(750)
+    .attrTween("d", arcTweenUpdate);
+```
+
+5. Adding elements from exit selection
+```javascript
+paths
+    .enter()
+    .append("path")
+    .each(function (d) {
+      this._current = d;
+    })
+    .attr("class", "arc")
+    .attr("stroke", "#fff")
+    .attr("stroke-width", 3)
+    .attr("fill", (d) => color(d.data.name))
+```
+
+6. Update and call legends
+```javascript
+legendGroup.call(legend);
+legendGroup.selectAll("text").attr("fill", "white");
+```
