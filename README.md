@@ -513,7 +513,7 @@ I have used the ES6 template strings for this purpose
 }
 ```
 
-### 5. Applying the visualization based on interactions (events)
+### 5. Applying the visualizations (tooltips) based on interactions (events)
 
 **Mouse hover (Show the tooltip)**
 
