@@ -5,9 +5,13 @@
   <img src="https://img.shields.io/badge/firebase-v7.19.0-yellow">
 </p>
 
+> A clean, naive, visually interactive expense tracker application to easily identify the costs and spendings through the ease of visualizations. This is a part of the course by **Shaun (Net ninja)** at Udemy.
+
 <p align="center">
   <img src="https://i.ibb.co/GcCcGKr/Capture.png" alt="Capture">
 </p>
+
+
 
 ## Demo 🪁
 
@@ -532,3 +536,11 @@ I have used the ES6 template strings for this purpose
   handleMouseOut(d, i, n);
 })
 ```
+
+## Contributor ✨
+* Twitter : [@malsaslam97](https://twitter.com/malsaslam97)
+* Github: [@AssSam7](https://github.com/AssSam7)
+* LinkedIn: [Aslam Mohammed](https://www.linkedin.com/in/malsaslam97/)
+
+## Show your support
+Give a ⭐️ if you think this application has some credibility
