@@ -460,7 +460,7 @@ const handleClick = (d, i, n) => {
 };
 ```
 
-## Adding a Tool-tip
+## Adding the Tool-tips
 
 Tooltips are like the dummy text displayed when an event is triggered on an element. In this project, I used a third party plug-in for D3 called **d3-tip** to draw the tooltip.
 
