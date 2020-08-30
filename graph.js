@@ -38,6 +38,10 @@ const legend = d3.legendColor().shape("circle").scale(color).shapePadding(15);
 
 // Update function
 const update = (data) => {
+  // Update and call legends
+  legendGroup.call(legend);
+  legendGroup.selectAll("text").attr("fill", "white");
+
   // Passing our names to ordinal scale domain
   color.domain(data.map((d) => d.name));
 
@@ -69,9 +73,11 @@ const update = (data) => {
     .duration(750)
     .attrTween("d", arcTweenEnter);
 
-  // Update and call legends
-  legendGroup.call(legend);
-  legendGroup.selectAll("text").attr("fill", "white");
+  // Add events
+  graph
+    .selectAll("path")
+    .on("mouseover", handleMouseOver)
+    .on("mouseout", handleMouseOut);
 };
 
 // Global data
@@ -132,3 +138,12 @@ function arcTweenUpdate(d) {
     return arcPath(i(t));
   };
 }
+
+// Events handlers
+const handleMouseOver = (d, i, n) => {
+  d3.select(n[i]).transition().duration(300).attr("fill", "#fff");
+};
+
+const handleMouseOut = (d, i, n) => {
+  d3.select(n[i]).transition().duration(300).attr("fill", color(d.data.name));
+};
