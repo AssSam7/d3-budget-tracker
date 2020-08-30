@@ -36,12 +36,22 @@ const legendGroup = svg
 
 const legend = d3.legendColor().shape("circle").scale(color).shapePadding(15);
 
+const tip = d3
+  .tip()
+  .attr("class", "tip card")
+  .html((d) => {
+    let content = `
+      <div class="name">${d.data.name}</div>
+    `;
+    content += `<div class="cost">${d.data.cost}</div>`;
+    content += `<div class="delete">Click slice to delete</div>`;
+
+    return content;
+  });
+
+graph.call(tip);
 // Update function
 const update = (data) => {
-  // Update and call legends
-  legendGroup.call(legend);
-  legendGroup.selectAll("text").attr("fill", "white");
-
   // Passing our names to ordinal scale domain
   color.domain(data.map((d) => d.name));
 
@@ -73,11 +83,22 @@ const update = (data) => {
     .duration(750)
     .attrTween("d", arcTweenEnter);
 
+  // Update and call legends
+  legendGroup.call(legend);
+  legendGroup.selectAll("text").attr("fill", "white");
+
   // Add events
   graph
     .selectAll("path")
-    .on("mouseover", handleMouseOver)
-    .on("mouseout", handleMouseOut);
+    .on("mouseover", (d, i, n) => {
+      tip.show(d, n[i]);
+      handleMouseOver(d, i, n);
+    })
+    .on("mouseout", (d, i, n) => {
+      tip.hide();
+      handleMouseOut(d, i, n);
+    })
+    .on("click", handleClick);
 };
 
 // Global data
@@ -145,6 +166,11 @@ const handleMouseOver = (d, i, n) => {
     .transition("changeSliceColor")
     .duration(300)
     .attr("fill", "#fff");
+
+  d3.select(n[i])
+    .transition("scaleSlice")
+    .duration(500)
+    .attr("transform", "scale(1.1)");
 };
 
 const handleMouseOut = (d, i, n) => {
@@ -152,4 +178,14 @@ const handleMouseOut = (d, i, n) => {
     .transition("revertSliceColor")
     .duration(300)
     .attr("fill", color(d.data.name));
+
+  d3.select(n[i])
+    .transition("revertScaleSlice")
+    .duration(500)
+    .attr("transform", "scale(1)");
+};
+
+const handleClick = (d, i, n) => {
+  const id = d.data.id;
+  db.collection("budget-planner").doc(id).delete();
 };

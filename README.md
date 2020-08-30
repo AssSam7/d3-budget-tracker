@@ -438,3 +438,24 @@ const handleMouseOut = (d, i, n) => {
 .transition("changeSliceColor")
 .transition("revertSliceColor")
 ```
+
+### 2. Click Events
+
+Delete that particular slice on clicking it
+
+**Adding the click event**
+
+```javascript
+.on("click", handleClick)
+```
+
+**Handler of the click event**
+
+To delete a particular element from the firestore, we use the **.delete()** by selecting the document using the **id**
+
+```javascript
+const handleClick = (d, i, n) => {
+  const id = d.data.id;
+  db.collection("budget-planner").doc(id).delete();
+};
+```
