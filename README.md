@@ -459,3 +459,76 @@ const handleClick = (d, i, n) => {
   db.collection("budget-planner").doc(id).delete();
 };
 ```
+
+## Adding a Tool-tip
+
+Tooltips are like the dummy text displayed when an event is triggered on an element. In this project, I used a third party plug-in for D3 called **d3-tip** to draw the tooltip.
+
+### 1. Adding the CDN
+
+```html
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.9.1/d3-tip.js"
+  integrity="sha512-jaNmuLbHtQ1ND+i63wVvwBd9T2hB3gTnk3x0Pp5R+AJwDdyzMe3t0vQqwUSoI9a/Ol1nscGV/1et4zSwL0P3AA=="
+  crossorigin="anonymous"
+></script>
+```
+
+### 2. Creating the tip and Applying it
+
+```javascript
+const tip = d3.tip().attr("class", "tip card");
+
+graph.call(tip);
+```
+
+### 3. Rendering the data on the tooltip
+
+I have used the ES6 template strings for this purpose
+
+```javascript
+.html((d) => {
+  let content = `
+    <div class="name">${d.data.name}</div>
+  `;
+  content += `<div class="cost">${d.data.cost}</div>`;
+  content += `<div class="delete">Click slice to delete</div>`;
+
+  return content;
+});
+```
+
+### 4. Styling the tooltip
+
+```css
+.tip {
+  padding: 10px;
+  background: #333;
+  color: #fff;
+}
+
+.tip .delete {
+  color: hotpink;
+  font-size: 0.8em;
+}
+```
+
+### 5. Applying the visualization based on interactions (events)
+
+**Mouse hover (Show the tooltip)**
+
+```javascript
+.on("mouseover", (d, i, n) => {
+  tip.show(d, n[i]);
+  handleMouseOver(d, i, n);
+})
+```
+
+**Mouse out (Hide the tooltip)**
+
+```javascript
+.on("mouseout", (d, i, n) => {
+  tip.hide();
+  handleMouseOut(d, i, n);
+})
+```
