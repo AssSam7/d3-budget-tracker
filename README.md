@@ -10,6 +10,7 @@
 </p>
 
 ## Demo 🪁
+
 https://pedantic-archimedes-31ed80.netlify.app
 
 ## Getting Started 🚀
@@ -47,30 +48,28 @@ Get the below code from console.firebase.google.com and check out, Adding this p
   const db = firebase.firestore();
 </script>
 ```
+
 ## HTML template using Materialize-CSS
 
 ### 1. Header
+
 ```html
 <header class="darken-1 section">
-   <h2 class="center white-text">Malsaslam</h2>
-   <p class="flow-text grey-text center text-lighten-2">
-     Monthly money tracker
-   </p>
+  <h2 class="center white-text">Malsaslam</h2>
+  <p class="flow-text grey-text center text-lighten-2">Monthly money tracker</p>
 </header>
 ```
 
 ### 2. Main Content Grid
+
 ```html
 <div class="container section">
-  <div class="row">
-    ...
-    ...
-    ...
-  </div>
+  <div class="row">... ... ...</div>
 </div>
 ```
 
 #### 2.1 Form
+
 ```html
 <form class="card z-depth-0">
   <div class="card-content">
@@ -112,7 +111,6 @@ const error = document.querySelector("#error");
 
 ## Form Event Listener
 
-
 ```javascript
 form.addEventListener("submit", (e) => {
   e.preventDefault();
@@ -124,11 +122,11 @@ form.addEventListener("submit", (e) => {
 ### 1. Form Validations
 
 ```javascript
- if (name.value && cost.value) {
-    error.textContent = "";
-  } else {
-    error.textContent = "Please enter the above values";
-  }
+if (name.value && cost.value) {
+  error.textContent = "";
+} else {
+  error.textContent = "Please enter the above values";
+}
 ```
 
 ### 2. Saving the data from the form to firestore
@@ -153,6 +151,7 @@ db.collection("budget-planner")
 ### 1. Setting the dimensions
 
 Using the Javascript object to store the dimensions
+
 ```javascript
 const dims = {
   height: 300,
@@ -190,6 +189,7 @@ const pie = d3
   .sort(null)
   .value((d) => d.cost);
 ```
+
 To unsort the data, **.sort()** must be called with **null** as a parameter.
 
 ### 4. Arc Path Generator
@@ -251,41 +251,46 @@ db.collection("budget-planner").onSnapshot((res) => {
 The function that executes everytime the data changes to re-renders the visualizations.
 
 1. Passing names to ordinal scale domain
+
 ```javascript
 color.domain(data.map((d) => d.name));
 ```
 
 2. Join enhanced (pie) data to path elements
+
 ```javascript
 const paths = graph.selectAll("path").data(pie(data));
 ```
 
 3. Exit selection
+
 ```javascript
-paths.exit().remove()
+paths.exit().remove();
 ```
 
 4. Current DOM updates
+
 ```javascript
-paths
-    .attr("d", arcPath)
+paths.attr("d", arcPath);
 ```
 
 5. Adding elements from exit selection
+
 ```javascript
 paths
-    .enter()
-    .append("path")
-    .each(function (d) {
-      this._current = d;
-    })
-    .attr("class", "arc")
-    .attr("stroke", "#fff")
-    .attr("stroke-width", 3)
-    .attr("fill", (d) => color(d.data.name))
+  .enter()
+  .append("path")
+  .each(function (d) {
+    this._current = d;
+  })
+  .attr("class", "arc")
+  .attr("stroke", "#fff")
+  .attr("stroke-width", 3)
+  .attr("fill", (d) => color(d.data.name));
 ```
 
 6. Update and call legends
+
 ```javascript
 legendGroup.call(legend);
 legendGroup.selectAll("text").attr("fill", "white");
@@ -294,6 +299,7 @@ legendGroup.selectAll("text").attr("fill", "white");
 ## Transitions using Custom Tweens
 
 Tweens are similar to **key frames** in CSS, where we can create complex transitions based on usecase. It operates based on 2 values
+
 - **Interpolation function:** It is like the starting and ending states of animation.
 - **Time-ticker:** It ticks between **0** and **1** for all the range of values interpolated.
 
@@ -313,18 +319,19 @@ const arcTweenEnter = (d) => {
 ```
 
 **Applying**
+
 ```javascript
 .transition()
 .duration(750)
   .attrTween("d", arcTweenEnter);
- ```
- 
- ### 2. Arc Exit Tween
- 
- The transition when an element is deleted and removed through the exit selection.
- 
- ```javascript
- const arcTweenExit = (d) => {
+```
+
+### 2. Arc Exit Tween
+
+The transition when an element is deleted and removed through the exit selection.
+
+```javascript
+const arcTweenExit = (d) => {
   let i = d3.interpolate(d.startAngle, d.endAngle);
 
   return function (t) {
@@ -335,6 +342,7 @@ const arcTweenEnter = (d) => {
 ```
 
 **Applying**
+
 ```javascript
 .transition().duration(750).attrTween("d", arcTweenExit)
 ```
@@ -358,6 +366,7 @@ function arcTweenUpdate(d) {
 ```
 
 **Applying**
+
 ```javascript
 .transition()
     .duration(750)
@@ -387,4 +396,45 @@ const legend = d3.legendColor().shape("circle").scale(color).shapePadding(15);
 ```javascript
 legendGroup.call(legend);
 legendGroup.selectAll("text").attr("fill", "white");
+```
+
+## Interactive Visualizations
+
+### 1. Mouse Events
+
+We can change the visualizations on interaction, like in our case change the color of the slice on mouse hover
+
+**Adding mouseover event**
+
+```javascript
+graph.selectAll("path").on("mouseover", handleMouseOver);
+```
+
+**Mouseover event handler**
+
+```javascript
+const handleMouseOver = (d, i, n) => {
+  d3.select(n[i]).transition().duration(300).attr("fill", "#fff");
+};
+```
+
+**Adding mouseout event (To revert the color on mouse exit)**
+
+```javascript
+.on("mouseout", handleMouseOut)
+```
+
+**Mouseout event handler**
+
+```javascript
+const handleMouseOut = (d, i, n) => {
+  d3.select(n[i]).transition().duration(300).attr("fill", color(d.data.name));
+};
+```
+
+**Naming the transition to prevent one transition interfere another**
+
+```javascript
+.transition("changeSliceColor")
+.transition("revertSliceColor")
 ```
