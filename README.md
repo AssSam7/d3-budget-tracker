@@ -11,8 +11,6 @@
   <img src="https://i.ibb.co/GcCcGKr/Capture.png" alt="Capture">
 </p>
 
-
-
 ## Demo 🪁
 
 https://pedantic-archimedes-31ed80.netlify.app
@@ -125,8 +123,10 @@ form.addEventListener("submit", (e) => {
 
 ### 1. Form Validations
 
+To check if both inputs are entered and the cost field only contains digits
+
 ```javascript
-if (name.value && cost.value) {
+if (name.value && cost.value && /^\d+$/.test(cost.value)) {
   error.textContent = "";
 } else {
   error.textContent = "Please enter the above values";
@@ -538,9 +538,11 @@ I have used the ES6 template strings for this purpose
 ```
 
 ## Contributor ✨
-* Twitter : [@malsaslam97](https://twitter.com/malsaslam97)
-* Github: [@AssSam7](https://github.com/AssSam7)
-* LinkedIn: [Aslam Mohammed](https://www.linkedin.com/in/malsaslam97/)
+
+- Twitter : [@malsaslam97](https://twitter.com/malsaslam97)
+- Github: [@AssSam7](https://github.com/AssSam7)
+- LinkedIn: [Aslam Mohammed](https://www.linkedin.com/in/malsaslam97/)
 
 ## Show your support
+
 Give a ⭐️ if you think this application has some credibility

@@ -7,7 +7,7 @@ form.addEventListener("submit", (e) => {
   e.preventDefault();
 
   // Validations
-  if (name.value && cost.value) {
+  if (name.value && cost.value && /^\d+$/.test(cost.value)) {
     const item = {
       name: name.value,
       cost: parseInt(cost.value),
